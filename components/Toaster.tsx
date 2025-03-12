@@ -1,6 +1,6 @@
 import { Toaster as Sonner } from "sonner";
 
-const Toaster = ({ ...props }) => {
+const Toaster = () => {
 
   return (
     <Sonner

@@ -23,12 +23,12 @@ const AddTask = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const email:any = localStorage.getItem('email')
+    const email = localStorage.getItem('email') as string | null
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-      assignedTo: email,
-      assignedBy: email
+      assignedTo: email || "",
+      assignedBy: email || ""
     });
     console.log(formData)
   };
@@ -39,7 +39,7 @@ const AddTask = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_ROUTE}/task/add`, 
         formData,
         {headers: 
@@ -55,6 +55,7 @@ const AddTask = () => {
       router.push('/dashboard/');
     } catch (error) {
       toast("Failed to create task. Please try again.");
+      return error
     } finally {
       setIsLoading(false);
     }

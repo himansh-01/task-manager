@@ -1,6 +1,6 @@
 "use client";
 import { FaSearch } from "react-icons/fa";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import FilterTask from "./FilterTask";
 import axios from "axios";
 import { toast } from "sonner";
@@ -10,14 +10,8 @@ interface Task {
   title: string;
   description: string;
   status: "pending" | "in-progress" | "completed";
-  dueDate: Date;
-  createdAt: Date;
-}
-
-interface RootState {
-  tasks: {
-    tasks: Task[];
-  };
+  dueDate: string;
+  createdAt: string;
 }
 
 export const Main = () => {
@@ -25,7 +19,6 @@ export const Main = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("")
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
-  const [sortOption, setSortOption] = useState("Sort by");
   
   useEffect(() => {
     setFilteredTasks(tasks);
@@ -53,8 +46,9 @@ export const Main = () => {
         )
         setTasks(response.data.result)
       }
-        catch(err:any){
+        catch(err){
           toast("fetch failed")
+          return err
         }
     }
 
@@ -68,10 +62,9 @@ export const Main = () => {
     };
   },[])
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const sort = event.target.value;
-    setSortOption(sort); 
+    const sort = event.target.value; 
   
-    let sortedTasks: Task[] = [...tasks]; 
+    const sortedTasks: Task[] = [...tasks]; 
   
     if (sort === "Due") {
       const sorted = sortedTasks.sort(

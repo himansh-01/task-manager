@@ -20,14 +20,13 @@ interface Task {
   assignedBy: string
 }
 
-const page = () => {
+const Page = () => {
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchTerm, setSearchTerm] = useState("")
   const [loading, setLoading] = useState(true);
   const [popupTask, setPopupTask] = useState<Task | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
-  const [sortOption, setSortOption] = useState("Sort by");
   const [showModal, setShowModal] = useState(false);
 
    // Modal input states
@@ -89,17 +88,17 @@ const page = () => {
         }
       );
       setTasks([...tasks, response.data]);
-      toast.success("Task edited successfully");
+      toast("Task edited successfully");
       setShowModal(false);
       resetModalFields();
     } catch (error) {
-      toast.error("Failed to edit task");
+      toast("Failed to edit task");
+      return error
     }
   };
 
   const handleSearch = () => {
     if (!searchTerm.trim()) {
-      setSortOption("Sort by")
       setTasks(tasks);
       return;
     }
@@ -120,10 +119,8 @@ const page = () => {
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const sort = event.target.value;
-    setSortOption(sort); 
-    console.log("hii")
   
-    let sortedTasks: Task[] = [...tasks]; 
+    const sortedTasks: Task[] = [...tasks]; 
   
     if (sort === "Due") {
       const sorted = sortedTasks.sort(
@@ -167,16 +164,16 @@ const page = () => {
 
       setTasks(
         updatedTasks
-          .filter((task: any) => task.assignedTo !== email)
-          .map((task: any) => ({
+          .filter((task) => task.assignedTo !== email)
+          .map((task) => ({
             ...task,
             status: task.status as 'pending' | 'completed' | 'in-progress'
           }))
       );
       setTasks(
         updatedTasks
-          .filter((task: any) => task.assignedTo !== email)
-          .map((task: any) => ({
+          .filter((task) => task.assignedTo !== email)
+          .map((task) => ({
             ...task,
             status: task.status as 'pending' | 'completed' | 'in-progress'
           }))
@@ -184,6 +181,7 @@ const page = () => {
       toast('Task marked as completed successfully.');
     } catch (error) {
       toast('Failed to complete task. Please try again.');
+      return error
     }
   };
 
@@ -205,10 +203,11 @@ const page = () => {
       toast('Task deleted successfully.');
     } catch (error) {
       toast('Failed to delete task. Please try again.');
+      return error
     }
   };
 
-    const handleTaskClick = (task: Task, event: React.MouseEvent) => {
+    const handleTaskClick = (task: Task) => {
        setPopupTask(task);
      };
 
@@ -236,8 +235,9 @@ const page = () => {
         const userTasks = resp.filter((task: Task) => task?.assignedTo === email && task?.assignedBy === "admin");
 
         setTasks(userTasks);
-      } catch (error:any) {
-        toast(error.message ||'Failed to load tasks. Please try again.');
+      } catch (error) {
+        toast('Failed to load tasks. Please try again.');
+        return error
       } finally {
         setLoading(false);
       }
@@ -303,14 +303,14 @@ const page = () => {
         ) :
             tasks.length === 0 ? (
                 <div className="text-center py-10">
-                  <p className="text-gray-500 mb-4">You don't have any tasks assigned by admin yet</p>
+                  <p className="text-gray-500 mb-4">You don&apos;t have any tasks assigned by admin yet</p>
                 </div>
               ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative mt-12">
               {currentTasks.map((task) => (
                 <div key={task._id} className="relative">
-                  <Card onClick={(e) => handleTaskClick(task, e)}>
+                  <Card onClick={(e) => handleTaskClick(task)}>
                     <CardContent className="p-6">
                       <div className="mb-2">
                         <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(task.status)}`}>
@@ -461,4 +461,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

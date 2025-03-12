@@ -19,7 +19,7 @@ interface Task {
 }
 
 interface TasksProps {
-  filteredTasks: any;
+  filteredTasks: Task[];
 }
 
 const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
@@ -65,11 +65,12 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
           }
         );
         setTasks([...tasks, response.data.result]);
-        toast.success("Task edited successfully");
+        toast("Task edited successfully");
         setShowModal(false);
         resetModalFields();
       } catch (error) {
-        toast.error("Failed to edit task");
+        toast("Failed to edit task");
+        return error
       }
     };
 
@@ -82,13 +83,12 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
     };
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal
     const fetchTasks = async () => {
       try {
         setTasks(filteredTasks);
       } catch (error) {
         toast('Failed to load tasks. Please try again.');
+        return error
       } finally {
         setLoading(false);
       }
@@ -149,6 +149,7 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
       toast('Task marked as completed successfully.');
     } catch (error) {
       toast('Failed to complete task. Please try again.');
+      return error
     }
   };
 
@@ -169,6 +170,7 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
       toast('Task deleted successfully.');
     } catch (error) {
       toast('Failed to delete task. Please try again.');
+      return error
     }
   };
 
@@ -183,7 +185,7 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
     }
   };
 
-  const handleTaskClick = (task: Task, event: React.MouseEvent) => {
+  const handleTaskClick = (task: Task) => {
     setPopupTask(task);
   };
 
@@ -221,7 +223,7 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
         </div>
       ) : tasksToRender.length === 0 ? (
         <div className="text-center py-10">
-          <p className="text-gray-500 mb-4">You don't have any tasks yet</p>
+          <p className="text-gray-500 mb-4">You don&apos;t have any tasks yet</p>
           <Link href="/dashboard/addtask">
             <Button className="bg-blue-600 text-white">Create Your First Task</Button>
           </Link>
@@ -229,9 +231,9 @@ const FilterTask: React.FC<TasksProps> = ({ filteredTasks }) => {
       ) : (
        <> 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
-          {currentTasks.map((task:any) => (
+          {currentTasks.map((task) => (
             <div key={task._id} className="relative">
-              <Card onClick={(e) => handleTaskClick(task, e)}>
+              <Card onClick={(e) => handleTaskClick(task)}>
                 <CardContent className="p-6">
                   <div className="mb-2">
                     <span

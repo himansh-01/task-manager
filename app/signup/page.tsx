@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar";
 import axios from "axios";
 import { toast } from "sonner";
 import { signupInfoSchema } from "@/utils/formValidation";
+import { ZodError } from "zod";
 
 export default function Signup() {
   type Role = "admin" | "user";
@@ -79,12 +80,12 @@ export default function Signup() {
       } else {
         toast(response.data.message || "Something went wrong");
       }
-    } catch (error:any) {
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         toast(error.response?.data?.message || "Error during signup");
       }
-      if (error.name === "ZodError") {
-        const pull = error.issues.map((err: any) => err.message)
+      if (error instanceof ZodError) {
+        const pull = error.issues.map((err) => err.message)
         toast(pull) 
       }
       else {

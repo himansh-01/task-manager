@@ -19,7 +19,7 @@ export default function Home() {
           
             <div className="flex gap-4">
               <form action={async() => { 'use server'; await redirect('/login')}}><Button type="submit" variant="ghost" className="hover:bg-[#d3d0d0]">Login</Button></form>
-              <Link href="/signup"><Button type="submit" className="bg-blue-600 text-white">Sign up – it's free!</Button></Link>
+              <Link href="/signup"><Button type="submit" className="bg-blue-600 text-white">Sign up – it&apos;s free!</Button></Link>
             </div>
           </div>  
           <div className="mt-20 ml-10 shadow-none">

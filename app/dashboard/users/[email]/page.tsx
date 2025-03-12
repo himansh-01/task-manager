@@ -73,7 +73,8 @@ export default function UserDetailPage({ params }: { params: Usable<{ email: str
         setUser(userResponse.data.result);
         setUserTasks(tasksResponse.data.result);
       } catch (error) {
-        toast.error("Failed to load user information");
+        toast("Failed to load user information");
+        return error
       } finally {
         setIsLoading(false);
       }
@@ -88,7 +89,7 @@ export default function UserDetailPage({ params }: { params: Usable<{ email: str
       isMounted = false;
     };
 
-  }, []);
+  }, [email]);
 
   const handleAddTask = () => {
     setShowModal(true); // Show the modal
@@ -126,7 +127,8 @@ export default function UserDetailPage({ params }: { params: Usable<{ email: str
       setShowModal(false);
       resetModalFields();
     } catch (error) {
-      toast.error("Failed to add task");
+      toast("Failed to add task");
+      return error
     }
   };
   const handleDeleteTask = async (_Id: string) => {
@@ -147,6 +149,7 @@ export default function UserDetailPage({ params }: { params: Usable<{ email: str
         toast('Task deleted successfully.');
       } catch (error) {
         toast('Failed to delete task. Please try again.');
+        return error
       }
     };
 

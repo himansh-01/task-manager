@@ -12,8 +12,8 @@ export async function handleLogout() {
     });
     return {success: true}
   }
-  catch(err:any){
-    return {success: false}
+  catch(err){
+    return {success: false, err}
   }
 
 }

@@ -42,6 +42,7 @@ const Profile = () => {
       setUseremail(response.data.result.email)
     } catch (error) {
       toast("Please try again.");
+      return error
       
     } finally {
       setIsLoading(false);
@@ -55,7 +56,7 @@ const Profile = () => {
   return () => {
     isMounted = false;
   };
-  },[])
+  },[formData])
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,

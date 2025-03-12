@@ -44,6 +44,7 @@ const UsersPage = () => {
         console.log(response.data.result)
       } catch (error) {
         toast('Failed to load users. Please try again.');
+        return error
       } finally {
         setLoading(false);
       }
@@ -68,6 +69,7 @@ const UsersPage = () => {
       toast('User deleted successfully.');
     } catch (error) {
       toast('Failed to delete user. Please try again.');
+      return error
     }
   };
 

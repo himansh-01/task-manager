@@ -4,7 +4,6 @@ import { FiUser, FiHome } from "react-icons/fi";
 import { MdAssignmentInd } from "react-icons/md";
 import { SidebarItem } from './SidebarItem';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 
 const Sidebar = () => {
 
@@ -27,7 +26,7 @@ const Sidebar = () => {
   return (
     <aside className="w-68 bg-white p-5 shadow-md border">
         <nav className="space-y-2">
-          <Link href="/dashboard/profile"><SidebarItem icon={<div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold">{name?.substring(0, 2).toUpperCase() || 'WM'}</div>} label={<span className="text-gray-700 font-semibold">{name}</span>} active={activeItem === ""} onClick={handleSidebarClick} /></Link>
+          <Link href="/dashboard/profile"><SidebarItem icon={<div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold">{name?.substring(0, 2).toUpperCase() || 'WM'}</div>} label={`${name}`} active={activeItem === ""} onClick={handleSidebarClick} /></Link>
           {role === "admin"? 
           <div className='pl-8'>
             <Link href="/dashboard"><SidebarItem icon={<FiHome />} label="Tasks" active={activeItem === "Tasks"} onClick={handleSidebarClick} /></Link>

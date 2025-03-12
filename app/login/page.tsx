@@ -11,6 +11,7 @@ import Navbar from "@/components/Navbar";
 import { toast } from "sonner";
 import axios from "axios";
 import { loginInfoSchema } from "@/utils/formValidation";
+import { ZodError } from "zod";
 
 
 export default function Login() {
@@ -24,7 +25,7 @@ export default function Login() {
     email: "",
     password: "",
     role: "user" as Role
-  });3
+  });
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ 
@@ -61,12 +62,12 @@ export default function Login() {
       
       router.push('/dashboard');
       
-    } catch (error:any) {
-      if (error.name === "ZodError") {
-        const pull = error.issues.map((err: any) => err.message)
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const pull = error?.issues?.map(err => err.message)
         toast(pull)
       }
-      toast.error(error instanceof Error ? error.message : 'Login failed');
+      toast(error instanceof Error ? error.message : 'Login failed');
     } finally {
       setLoading(false);
     }
