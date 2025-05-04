@@ -1,18 +1,16 @@
-import { Suspense } from 'react';
 import UserDetailClient from './UserDetails';
 
-// Main page component must be async for App Router
-export default async function UserDetailPage({ 
-  params 
-}: { 
-  params: { email: string } 
+export default async function UserDetailPage({
+  params,
+}: {
+  params: { email: string };
 }) {
-  // Extract the email from params
+  await new Promise(resolve => setTimeout(resolve, 0));
   const email = params.email;
   
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <div>
       <UserDetailClient email={email} />
-    </Suspense>
+    </div>
   );
 }
