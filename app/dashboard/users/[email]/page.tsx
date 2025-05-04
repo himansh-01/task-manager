@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MdDelete } from "react-icons/md";
+import { NextPage } from "next";
 
 export interface Task {
   _id: string;
@@ -28,7 +29,14 @@ export interface User {
   verified: boolean;
 }
 
-export default function UserDetailPage({ params }: { params: { email: string } }) {
+interface PageProps {
+  params: {
+    email: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+ const UserDetailPage: NextPage<PageProps> = ({ params }) => {
   const { email } = params
   const [user, setUser] = useState<User | null>(null);
   const [userTasks, setUserTasks] = useState<Task[]>([]);
@@ -347,3 +355,5 @@ export default function UserDetailPage({ params }: { params: { email: string } }
     </div>
   );
 }
+
+export default UserDetailPage
