@@ -7,30 +7,31 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { MdDelete } from "react-icons/md";
 
-export interface Task {
-  _id: string;
-  title: string;
-  description: string;
-  status: "pending" | "in-progress" | "completed";
-  dueDate: Date;
-  assignedBy: string;
-  assignedTo: string;
-  createdAt: Date;
-}
+// export interface Task {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   status: "pending" | "in-progress" | "completed";
+//   dueDate: Date;
+//   assignedBy: string;
+//   assignedTo: string;
+//   createdAt: Date;
+// }
 
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'user';
-  profilePhoto?: string;
-  verified: boolean;
-}
+// export interface User {
+//   _id: string;
+//   name: string;
+//   email: string;
+//   password: string;
+//   role: 'admin' | 'user';
+//   profilePhoto?: string;
+//   verified: boolean;
+// }
 
-export default function UserDetailClient({ email } :  {email : string}) {
+export default function UserDetailPage({ params }) {
+  const { email } = params
   const [user, setUser] = useState<User | null>(null);
-  const [userTasks, setUserTasks] = useState<Task[]>([]);
+  const [userTasks, setUserTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
@@ -130,7 +131,7 @@ export default function UserDetailClient({ email } :  {email : string}) {
       return error
     }
   };
-  const handleDeleteTask = async (_Id: string) => {
+  const handleDeleteTask = async (_Id) => {
       try {
         const token = localStorage.getItem('token');
         await axios.delete(
@@ -323,7 +324,7 @@ export default function UserDetailClient({ email } :  {email : string}) {
                 <select
                   className="w-full px-3 py-2 border rounded-md"
                   value={taskStatus}
-                  onChange={(e) => setTaskStatus(e.target.value as Task["status"])}
+                  onChange={(e) => setTaskStatus(e.target.value)}
                 >
                   <option value="pending">Pending</option>
                   <option value="in-progress">In Progress</option>
