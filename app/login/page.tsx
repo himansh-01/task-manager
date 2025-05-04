@@ -62,12 +62,16 @@ export default function Login() {
       
       router.push('/dashboard');
       
-    } catch (error) {
+    } catch (error:any) {
       if (error instanceof ZodError) {
-        const pull = error?.issues?.map(err => err.message)
-        toast(pull)
+        return error?.issues?.map((err:any) => toast(err.message))
       }
-      toast(error instanceof Error ? error.message : 'Login failed');
+      else if(axios.isAxiosError(error)){
+        toast(error.message || "Something went wrong")
+      }
+      else{
+        toast("unexpected error occured")
+      }
     } finally {
       setLoading(false);
     }
@@ -124,7 +128,6 @@ export default function Login() {
                 name="email" 
                 value={formData.email}
                 onChange={handleChange} 
-                required
               />
             </div>
             <div className="w-[98%]">
@@ -137,7 +140,6 @@ export default function Login() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  required
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}

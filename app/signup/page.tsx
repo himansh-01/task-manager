@@ -1,6 +1,6 @@
 "use client" 
 import { useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,6 +54,18 @@ export default function Signup() {
     setLoading(true);
 
     try {
+      // Validate the form data first
+      try {
+        signupInfoSchema.parse(formData);
+      } catch (validationError) {
+        if (validationError instanceof ZodError) {
+          validationError.issues.forEach((err) => toast.error(err.message));
+          setLoading(false);
+          return;
+        }
+      }
+      
+      // After validation passes, create FormData
       const formDataToSend = new FormData();
       formDataToSend.append("name", formData.name);
       formDataToSend.append("email", formData.email);
@@ -63,10 +75,10 @@ export default function Signup() {
       if (profilePhoto) {
         formDataToSend.append("photo", profilePhoto);
       }
-      const validatedData = signupInfoSchema.parse(formDataToSend)
+      
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_ROUTE}/auth/signup`,
-        validatedData,
+        formDataToSend,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -78,18 +90,13 @@ export default function Signup() {
         toast.success(response.data.message || "Signup successful. Please check your email for verification.");
         router.push('/login');
       } else {
-        toast(response.data.message || "Something went wrong");
+        toast.error(response.data.message || "Something went wrong");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        toast(error.response?.data?.message || "Error during signup");
-      }
-      if (error instanceof ZodError) {
-        const pull = error.issues.map((err) => err.message)
-        toast(pull) 
-      }
-      else {
-        toast("An unexpected error occurred");
+        toast.error(error.response?.data?.message || "Error during signup");
+      } else {
+        toast.error("An unexpected error occurred");
       }
     } finally {
       setLoading(false);
@@ -102,7 +109,7 @@ export default function Signup() {
         <div className="flex">
         <Button 
           className="ml-4 bg-blue-600 text-white"
-          onClick={() => redirect('/login')}
+          onClick={() => router.push('/login')}
         >Login</Button>
         <Button 
           className="ml-4 bg-blue-600 text-white"
