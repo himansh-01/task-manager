@@ -28,8 +28,8 @@ export interface User {
   verified: boolean;
 }
 
-export default function UserDetailPage({ params }: { params: Usable<{ email: string }> }) {
-  const { email } = use(params)
+export default function UserDetailPage({ params }: { params: { email: string } }) {
+  const { email } = params
   const [user, setUser] = useState<User | null>(null);
   const [userTasks, setUserTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
